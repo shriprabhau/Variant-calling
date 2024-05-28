@@ -1,4 +1,4 @@
-## SNP calling and SNP effect from Ornatus dragon genome
+## SNP calling from Ornatus dragon genome
 ### Dataset
 There were 26 paired end reads downloaded from AGRF (non-public data), Tash's project. The raw reads are backed up in pshell
 ### QC and trimming
