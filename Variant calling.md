@@ -7,7 +7,7 @@ fastqc *.fastq.gz -o out_dir
 fastp -i input1.fastq.gz -o output1.fastq.gz -I input2.fastq.gz -O output2.fastq.gz
 ```
 ### Alignment
-Align the trimmed reads to the reference and then sort the files. I used bowtie2 and samtools to do it. Build a index for the reference first and them align and sort using samtools. 
+Align the trimmed reads to the reference and then sort the files. I used bowtie2 and samtools to do it. Build a index for the reference first, align and sort using samtools. 
 ```
 bowtie2-build reference.fa output_name 
 bowtie2 --end-to-end --sensitive -x /scratch/pawsey0149/supadhyaya/ornate_dragon/ornate_dragon {-1 ${FILENAME1} -2 ${FILENAME2}} | samtools sort -o ${FILENAME%%_R1.trimmed.fastq.gz}_sorted.bam
@@ -46,6 +46,8 @@ rule samtools_index:
         "v1.30.0/bio/samtools/faidx" 
 ```
 #### Calling
+The snakmake wrapper takes aligned bam files as input and .fa file as reference, uses bcftools mpileup and call function to call SNPs on the files and returns .bcf files back as output. 
+
 ```
 # check if logfile exists or make new if it doesn't
 import os.path
@@ -108,19 +110,19 @@ rule bcf_view_o_vcf:
         "v1.30.0/bio/bcftools/view"
 ```
 
-You get 26 calls.bcf files which have to be merged. These files need to be indexed and merged using bcftools. 
+You get 26 calls.bcf files which have to be merged. Each of these files need to be indexed, merged and converted to .vcf using bcftools. 
 ```
 bcftools index *.bcf
 bcftools merge *calls.bcf -o ../merge/ornatedragon_merged.vcf -O v
 ```
-For separate VCFs for each sample, and check stats for each
+For separate VCFs for each sample you convert them separately, and can check stats for each
 ```
 bcftools view ${FILENAME} -O v -o ${FILENAME%%.calls.bcf}.vcf
 bcftools stats filename > output.txt
 ```
 
 ### Filtering
-``` vcftools --vcf ${FILENAME} --max-alleles 2 --max-missing 0.1 --maf 0.05 --minQ 30 --recode --out ${FILENAME%%.vcf} ```
+``` vcftools --vcf ${FILENAME} --max-alleles 2 --max-missing 0.1 --minQ 30 --recode --out ${FILENAME%%.vcf} ```
 
 
 
