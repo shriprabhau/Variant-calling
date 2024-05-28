@@ -30,3 +30,8 @@ Change reference fasta filename to sequences.fa and annotation filename to genes
 ` java -Xmx8g -jar snpEff.jar eff -s /scratch/pawsey0149/supadhyaya/snpeff/snpEff/results/${FILENAME%%.vcf}_summary.html co1.0 /scratch/pawsey0149/supadhyaya/ornate_dragon/calls/${FILENAME} > /scratch/pawsey0149/supadhyaya/snpeff/snpEff/results/${FILENAME%%.vcf}.ann.vcf `
 
 It creates a stats.html files, genes.txt file and annotation.vcf file.
+
+### Split for Homs and Hets
+
+java -jar snpEff.jar SnpSift.jar filter "isHom" input.vcf > output.vcf
+java -jar snpEff.jar SnpSift.jar filter "isHet" input.vcf > output.vcf
