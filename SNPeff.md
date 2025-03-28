@@ -33,5 +33,7 @@ It creates a stats.html files, genes.txt file and annotation.vcf file.
 
 ### Split for Homs and Hets
 
+```
 java -jar snpEff.jar SnpSift.jar filter "isHom" input.vcf > output.vcf
 java -jar snpEff.jar SnpSift.jar filter "isHet" input.vcf > output.vcf
+```
